@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html 	xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:c="http://java.sun.com/jsf/core"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://xmlns.jcp.org/jsf/core">
+	<h:head>
+	      
+		  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<style>
+			body{width: 100%;height: 100%;font-family: 'Open Sans', sans-serif;
+			  background: #cfe7fa; /* Old browsers */
+			  background: -moz-linear-gradient(left, #cfe7fa 0%, #6393c1 100%); /* FF3.6-15 */
+			  background: -webkit-linear-gradient(left, #cfe7fa 0%,#6393c1 100%); /* Chrome10-25,Safari5.1-6 */
+			  background: linear-gradient(to right, #cfe7fa 0%,#6393c1 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+			  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cfe7fa', endColorstr='#6393c1',GradientType=1 ); /* IE6-9 */}	
+		</style>
+		<h:outputStylesheet library="css" name="bootstrap.min.css"/>
+		<script type="text/javascript">
+            function calculateAmount() {
+                $("#sell .amt").val(($("#sell .sellPrice").val() * $("#sell .qty").val()).toFixed(2));
+            }
+        </script>
+	</h:head>
+	<h:body>
+		<div class="container bootstrap snippet">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <h1>
+                            Welcome <h:outputText value="#{user.userid}" />
+                        </h1>
+                        <span style="float:right;"><h:link value="Logout" outcome="index" style="text-align: right;"/></span>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    
+                    <!-- main column -->
+                    <div class="col-sm-6">
+                        <h:form id="sell">
+                            <h:messages style="color: red;"/>
+                            Stock Name: <h:inputText binding="#{stock_symbol}" id="symbol" styleClass="form-control sellSymbol" value="#{stockApiBean.stock_symbol}" required="true"/><br />
+                            Price: <h:inputText binding="#{sellPrice}" id="price" styleClass="form-control sellPrice" value="#{stockApiBean.sellPrice}" required="true"/><br />
+                            Quantity: <h:inputText binding="#{db_qty}" id="qty" styleClass="form-control qty" value="#{stockApiBean.db_qty}" required="true" onkeyup="calculateAmount()"/><br />
+                            Amount: <h:inputText binding="#{db_amt}" id="amt" styleClass="form-control amt" value="#{stockApiBean.db_amt}" required="true"/><br />
+                            <h:commandButton styleClass="btn btn-success btn-login-submit" value="Sell" action="#{stockApiBean.sellRecord(stock_symbol.value, sellPrice.value, db_qty.value, amt.value)}"/>
+                            
+                        </h:form>
+                        <br /><br />
+                       
+                    </div>
+                </div>
+            </div>
+	</h:body>
+</html>	

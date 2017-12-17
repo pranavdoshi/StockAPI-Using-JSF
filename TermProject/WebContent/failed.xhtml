@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html 	xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:c="http://java.sun.com/jsf/core"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+		xmlns:f = "http://java.sun.com/jsf/core">
+	<h:head>
+		  <title>Login Page</title>		  	 
+		  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		  <style>
+			  a{outline:none}
+			  @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+			  body{width: 100%;height: 100%;font-family: 'Open Sans', sans-serif;
+			  background: #cfe7fa; /* Old browsers */
+			  background: -moz-linear-gradient(left, #cfe7fa 0%, #6393c1 100%); /* FF3.6-15 */
+			  background: -webkit-linear-gradient(left, #cfe7fa 0%,#6393c1 100%); /* Chrome10-25,Safari5.1-6 */
+			  background: linear-gradient(to right, #cfe7fa 0%,#6393c1 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+			  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cfe7fa', endColorstr='#6393c1',GradientType=1 ); /* IE6-9 */}
+			  .form-signin{max-width:400px;margin:50px auto 0;padding:35px;background:#fff}
+			  .signin-heading{color: #a90329;margin:10px 0;}
+			  #success_message{ display: none;}
+			  .inputgroup{margin:20px 0}
+			</style>
+		  <h:outputStylesheet library="css" name="bootstrap.min.css"/>
+	</h:head>
+	<h:body>
+    <f:view>
+        <p>There is an error in signing up. See Server Console for error.</p>
+        <h:outputLink value="register.xhtml">Back</h:outputLink>
+    </f:view>
+</h:body>
+</html>

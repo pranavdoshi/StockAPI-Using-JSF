@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html 	xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:c="http://java.sun.com/jsf/core"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://xmlns.jcp.org/jsf/core">
+	<h:head>
+		  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		  <style>
+			body{width: 100%;height: 100%;font-family: 'Open Sans', sans-serif;
+			  background: #cfe7fa; /* Old browsers */
+			  background: -moz-linear-gradient(left, #cfe7fa 0%, #6393c1 100%); /* FF3.6-15 */
+			  background: -webkit-linear-gradient(left, #cfe7fa 0%,#6393c1 100%); /* Chrome10-25,Safari5.1-6 */
+			  background: linear-gradient(to right, #cfe7fa 0%,#6393c1 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+			  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cfe7fa', endColorstr='#6393c1',GradientType=1 ); /* IE6-9 */}	
+		</style>
+		<h:outputStylesheet library="css" name="bootstrap.min.css"/>
+	</h:head>
+	<h:body>
+			<div class="container">
+				<div class="row text-center">
+			        <div class="col-sm-6 col-sm-offset-3">
+			        	<br/><br/>
+			        	<p style="font-size:20px;color:#5C5C5C;"> #{userid} Dashboard</p>
+			        	<h:form>
+				            <p>
+				                <h:commandLink value="logout" action="#{user.logout}" />
+				            </p>
+				            <p>
+				                <h:commandLink value="Update" action="#{user.getupdateData}" />
+				                
+				            </p>
+				            <p>Account Balance : <strong>#{user.getBalance()}</strong></p>
+				            <br /> <br />
+				           <p>View Stocks and Details</p> 
+				           <br />
+				        <label for="sel1">Stock: </label>
+                        <h:selectOneMenu id="symbol" value="#{stockApiBean.selectedSymbol}">
+                            <f:selectItems value="#{stockApiBean.availableSymbols}" />
+                        </h:selectOneMenu>
+
+                        <label for="sel1">Interval: </label>
+                        <h:selectOneMenu id="interval" value="#{stockApiBean.selectedInterval}">
+                            <f:selectItems value="#{stockApiBean.availableIntervals}" />
+                        </h:selectOneMenu>
+                        <br />
+                        <br />
+                        <h:commandButton value="View Stocks Data" action="#{stockApiBean.timeseries}" styleClass="btn btn-success" />
+				       <br /> 
+				        </h:form>
+			    	</div>
+			    	
+					               
+				</div>
+				<br />
+				<div class="row">
+					<div class="col-sm-6">
+						<h:panelGroup rendered="#{not empty stockApiBean.table1Markup}">
+                    		<h:outputText value="#{stockApiBean.table1Markup}" escape="false" styleClass="preformatted" />
+                		</h:panelGroup>
+					</div>
+					
+			    		
+			    	</div>
+			    	<br />
+			    	<div class="row">
+			    		<h:panelGroup rendered="#{not empty stockApiBean.table2Markup}">
+                    	<h:outputText value="#{stockApiBean.table2Markup}" escape="false" styleClass="preformatted" />
+                	</h:panelGroup>	
+			    	</div>
+			</div>	
+	</h:body>
+</html>		
