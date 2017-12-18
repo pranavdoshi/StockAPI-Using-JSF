@@ -38,7 +38,7 @@ public class StockApiBean{
 
     private static final long serialVersionUID = 1L;
     static final String API_KEY = "8LTIDPMBLJOF6JPZ";
-
+    private String transctn;
     private String symbol;
     private String stock_symbol;
     private double price;
@@ -57,13 +57,26 @@ public class StockApiBean{
 		this.purchased = purchased;
 	}
 
+	private String selled;
+    public String getselled() {
+		return selled;
+	}
+
+
+
+	public void setselled(String selled) {
+		this.selled = selled;
+	}
+
 	private Float db_price;
     private Float db_amt;
     private Integer db_qty;
     private Integer temp_qty;
 
     private String selectedSymbol;
+    private String selectedSymbolss;
     private List<SelectItem> availableSymbols;
+    private List<SelectItem> availableSymbolss;
 
     public String getStock_symbol() {
 		return stock_symbol;
@@ -76,6 +89,18 @@ public class StockApiBean{
 
 
 
+	public String getSelectedSymbolss() {
+		return selectedSymbolss;
+	}
+
+
+
+	public void setSelectedSymbolss(String selectedSymbolss) {
+		this.selectedSymbolss = selectedSymbolss;
+	}
+
+
+
 	public void setDb_price(Float db_price) {
 		this.db_price = db_price;
 	}
@@ -84,6 +109,18 @@ public class StockApiBean{
 
 	public Float getDb_amt() {
 		return db_amt;
+	}
+
+
+
+	public String getTransctn() {
+		return transctn;
+	}
+
+
+
+	public void setTransctn(String transctn) {
+		this.transctn = transctn;
 	}
 
 
@@ -180,9 +217,15 @@ public class StockApiBean{
     public List<SelectItem> getAvailableSymbols() {
         return availableSymbols;
     }
+    public List<SelectItem> getAvailableSymbolss() {
+        return availableSymbolss;
+    }
 
     public void setAvailableSymbols(List<SelectItem> availableSymbols) {
         this.availableSymbols = availableSymbols;
+    }
+    public void setAvailableSymbolss(List<SelectItem> availableSymbolss) {
+        this.availableSymbolss = availableSymbolss;
     }
 
     public String getSymbol() {
@@ -258,9 +301,10 @@ public class StockApiBean{
         availableIntervals.add(new SelectItem("15min", "15min"));
         availableIntervals.add(new SelectItem("30min", "30min"));
         availableIntervals.add(new SelectItem("60min", "60min"));
+        
     }
-
-   
+    
+    
     public String createDbRecord(String symbol, double price, int qty, double amt) {
         try {
            
@@ -279,7 +323,6 @@ public class StockApiBean{
                             .getSessionMap().get("bal"));
             
             System.out.println(uid);
-            conn = DatabaseConnect.getConnection();
             ps = conn.prepareStatement("select stock_symbol,qty,amt from purchase where uid = '"+ uid + "'");
             rs = ps.executeQuery();
             if(rs.next())
@@ -297,11 +340,12 @@ public class StockApiBean{
 	            	qty = qty+db_qty;
 	            	System.out.println(qty);
 	            	amt = Math.round((amt + db_amt)*100.0)/100.0;
-	            	
+	            	transctn = "Purchased Stocks";
 	            	System.out.println(amt);
 	            	bal = bal - amt;
 	            	statement.executeUpdate("UPDATE `purchase`  SET price = '" + price + "', qty = '" + qty + "', amt = '" + amt + "' WHERE uid = '" + uid + "'");
 	            	statement.executeUpdate("UPDATE `users`  SET balance = '" + bal + "' WHERE uid = '" + uid + "'");
+	            	statement.executeUpdate("INSERT INTO history(id,uid,transaction) VALUES(NULL,'"+uid+"','"+transctn+"')");
 	            	statement.close();
 	                conn.close();
 	                this.purchased+="purchased";
@@ -310,9 +354,11 @@ public class StockApiBean{
 	            }
 	            else {
 	            	bal = bal - amt;
+	            	transctn = "Purchased Stocks";
 	            	statement.executeUpdate("INSERT INTO `purchase` (`id`, `uid`, `stock_symbol`, `qty`, `price`, `amt`) "
 	                        + "VALUES (NULL,'" + uid + "','" + symbol + "','" + qty + "','" + price + "','" + amt +"')");
 	            	statement.executeUpdate("UPDATE `users`  SET balance = '" + bal + "' WHERE uid = '" + uid + "'");
+	            	statement.executeUpdate("INSERT INTO history(id,uid,transaction) VALUES(NULL,'"+uid+"','"+transctn+"')");
 	            	statement.close();
 	                conn.close();
 	                this.purchased+="purchased";
@@ -323,9 +369,11 @@ public class StockApiBean{
             else
             {
             	bal = bal - amt;
+            	transctn = "Purchased Stocks";
             	statement.executeUpdate("INSERT INTO `purchase` (`id`, `uid`, `stock_symbol`, `qty`, `price`, `amt`) "
                         + "VALUES (NULL,'" + uid + "','" + symbol + "','" + qty + "','" + price + "','" + amt +"')");
             	statement.executeUpdate("UPDATE `users`  SET balance = '" + bal + "' WHERE uid = '" + uid + "'");
+            	statement.executeUpdate("INSERT INTO history(id,uid,transaction) VALUES(NULL,'"+uid+"','"+transctn+"')");
             	statement.close();
                 conn.close();
                 this.purchased+="purchased";
@@ -367,12 +415,13 @@ public class StockApiBean{
 	
 	public String sellRecord(String symbol, double price, int qty, double amt) {
         try {
+        	this.selled="";
            System.out.println("Price");
             Connection conn = DatabaseConnect.getConnection();
             Statement statement = conn.createStatement();
             ResultSet rs = null;
             PreparedStatement ps = null;
-            
+            transctn = "Sold Stocks";
             
             Integer uid = Integer.parseInt((String) FacesContext.getCurrentInstance()
                     .getExternalContext()
@@ -386,10 +435,13 @@ public class StockApiBean{
            	System.out.println(bal);
            		bal = bal + amt;
                	System.out.println(bal);
-            	statement.executeUpdate("UPDATE `purchase`  SET qty = '" + qty + "' amt = '" + amt + "' WHERE uid = '" + uid + "'");
+            	statement.executeUpdate("UPDATE `purchase`  SET qty = '" + qty + "', amt = '" + amt + "' WHERE uid = '" + uid + "'");
             	statement.executeUpdate("UPDATE `users`  SET balance = '" + bal + "' WHERE uid = '" + uid + "'");
+            	statement.executeUpdate("INSERT INTO `history` (`id`, `uid`, `transaction`) "
+                        + "VALUES (NULL,'" + uid + "','" + transctn +"')");
             	statement.close();
                 conn.close();
+                this.selled+="selled";
                 FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully Sold stock",""));
             
                   

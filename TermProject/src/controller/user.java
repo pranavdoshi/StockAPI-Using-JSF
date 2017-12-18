@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -25,6 +27,15 @@ public class user {
     private String address;
     private String phonenumber;
     private String password;
+    private String table1Markup;
+    private String dbPassword;
+    private String dbName;
+    private String role;
+    private String dbRole;
+    private String Balance;
+    private String tempTrans;
+    DataSource ds;
+
     public String getLastname() {
 		return lastname;
 	}
@@ -37,19 +48,6 @@ public class user {
 	public void setFirstname(String firstname) {
 		this.firstname = firstname;
 	}
-
-
-	private String dbPassword;
-    private String dbName;
-    private String role;
-    private String dbRole;
-    private String Balance;
-    
-
-
-	DataSource ds;
-	
-	
 	public String getRole() {
 		return role;
 	}
@@ -282,7 +280,72 @@ public class user {
 	    }
 	}
 
-   
+   public String getActivity() {
+	   Integer uid = Integer.parseInt((String) FacesContext.getCurrentInstance()
+               .getExternalContext()
+               .getSessionMap().get("uid"));
+	   Connection conn = DatabaseConnect.getConnection();
+	   PreparedStatement ps = null;
+	   ResultSet rs = null;
+	   this.table1Markup = "";
+	   try {
+		   String sql = "select transaction from history where uid = '"
+                   + uid + "' order by transaction DESC";
+		   	ps = conn.prepareStatement(sql);
+		   	System.out.println("Inside Activity "+uid);
+			 rs = ps.executeQuery();
+			Integer count = 1;
+			while(rs.next())
+		            {
+				System.out.println("Count is "+count);
+						if(count==5)
+						{
+							break;
+						}
+			        	tempTrans = rs.getString("transaction");
+			        	System.out.println(tempTrans);
+			        	this.table1Markup += ""+count+" . "+tempTrans+" \n";
+			        	
+		                count=count+1;
+		            }		                                  
+					
+			
+		}
+		  catch (Exception e) {
+				System.err.println("Exception: " + e.getMessage());
+			}
+	   return table1Markup;
+	   
+   }
+   public String adminView() {
+	   Integer uid = Integer.parseInt((String) FacesContext.getCurrentInstance()
+               .getExternalContext()
+               .getSessionMap().get("uid"));
+	    String name;
+	   String markup = "";
+	   String rol;
+	   try {
+		   Connection conn = DatabaseConnect.getConnection();
+           Statement statement = conn.createStatement();
+           ResultSet rs = null;
+           PreparedStatement ps = null;
+           ps = conn.prepareStatement("select username,role from users where uid > 1");
+           rs = ps.executeQuery();
+			while(rs.next())
+			{
+				name=rs.getString("username");
+				rol = rs.getString("role");
+				markup += name +"  "+ rol+"  ";
+				System.out.println(markup);
+			}
+			
+		}
+	   catch (SQLException e) {
+           e.printStackTrace();
+       }
+	   return markup;
+
+   }
     public String logout() {
     	 FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
          return "index.xhtml?faces-redirect=true";

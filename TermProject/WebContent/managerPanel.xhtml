@@ -22,16 +22,41 @@
 				<div class="row text-center">
 			        <div class="col-sm-6 col-sm-offset-3">
 			        	<br/><br/>
-			        	<p style="font-size:20px;color:#5C5C5C;"> #{user.userid} Dashboard</p>
+			        	<p style="font-size:20px;color:#5C5C5C;">#{user.userid} Manager's Dashboard</p>
 			        	<h:form>
 				            <p>
 				                <h:commandLink value="logout" action="#{user.logout}" />
 				            </p>
 				            <p>
-				                <h:commandLink value="Update Profile" action="update" />
+				                <h:commandLink value="Update" action="#{user.getupdateData}" />
 				            </p>
 				            
+				        <p>Manager Account Balance : <strong>#{user.getBalance()}</strong></p>
+				            <br /> <br />
+				            <p>Last 5 Transactions : </p>
+				            <div>
+				            	#{user.getActivity()}
+				            </div>
+				            
+				            <br />
+				            
+				           <p>View Stocks and Details</p> 
+				           <br />
+				        <label for="sel1">Stock: </label>
+                        <h:selectOneMenu id="symbol" value="#{stockApiBean.selectedSymbol}">
+                            <f:selectItems value="#{stockApiBean.availableSymbols}" />
+                        </h:selectOneMenu>
+
+                        <label for="sel1">Interval: </label>
+                        <h:selectOneMenu id="interval" value="#{stockApiBean.selectedInterval}">
+                            <f:selectItems value="#{stockApiBean.availableIntervals}" />
+                        </h:selectOneMenu>
+                        <br />
+                        <br />
+                        <h:commandButton value="View Stocks Data" action="#{stockApiBean.timeseries}" styleClass="btn btn-success" />
+				       <br /> 
 				        </h:form>
+
 			    	</div>
 				</div>
 			</div>	

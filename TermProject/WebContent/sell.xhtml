@@ -20,7 +20,7 @@
 		<h:outputStylesheet library="css" name="bootstrap.min.css"/>
 		<script type="text/javascript">
             function calculateAmount() {
-                $("#sell .amt").val(($("#sell .sellPrice").val() * $("#sell .qty").val()).toFixed(2));
+                $("#sell .amt").val(($("#sell .purchasePrice").val() * $("#sell .qty").val()).toFixed(2));
             }
         </script>
 	</h:head>
@@ -42,11 +42,11 @@
                         <h:form id="sell">
                             <h:messages style="color: red;"/>
                             Stock Name: <h:inputText binding="#{stock_symbol}" id="symbol" styleClass="form-control sellSymbol" value="#{stockApiBean.stock_symbol}" required="true"/><br />
-                            Price: <h:inputText binding="#{sellPrice}" id="price" styleClass="form-control sellPrice" value="#{stockApiBean.sellPrice}" required="true"/><br />
+                           Price: <h:inputText binding="#{purchasePrice}" id="price" styleClass="form-control purchasePrice" value="#{stockApiBean.purchasePrice}" required="true"/><br />
                             Quantity: <h:inputText binding="#{db_qty}" id="qty" styleClass="form-control qty" value="#{stockApiBean.db_qty}" required="true" onkeyup="calculateAmount()"/><br />
                             Amount: <h:inputText binding="#{db_amt}" id="amt" styleClass="form-control amt" value="#{stockApiBean.db_amt}" required="true"/><br />
-                            <h:commandButton styleClass="btn btn-success btn-login-submit" value="Sell" action="#{stockApiBean.sellRecord(stock_symbol.value, sellPrice.value, db_qty.value, amt.value)}"/>
-                            
+                            <h:commandButton styleClass="btn btn-success btn-login-submit" value="Sell" action="#{stockApiBean.sellRecord(stock_symbol.value, purchasePrice.value, db_qty.value, amt.value)}"/>
+                            <h:commandButton styleClass="btn btn-success btn-login-submit" value="Go back" action="userPanel.xhtml"/>
                         </h:form>
                         <br /><br />
                        
